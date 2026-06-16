@@ -3,3 +3,5 @@
 *.xcuserstate
 Example-iOS/TestDragAbleView/TestDragAbleView.xcodeproj/project.xcworkspace/xcuserdata/pkh0225.xcuserdatad/UserInterfaceState.xcuserstate
 Example-iOS/TestDragAbleView/TestDragAbleView.xcodeproj/project.xcworkspace/xcuserdata/pkh0225.xcuserdatad/UserInterfaceState.xcuserstate
+/.build
+.swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata

@@ -186,9 +186,9 @@ public class DragAbleViewManager {
     }
 }
 
-nonisolated private extension UIView {
+private extension UIView {
     private struct AssociatedKeys {
-        nonisolated(unsafe) static var tagName: UInt8 = 0
+        static var tagName: UInt8 = 0
     }
 
     var tagName: String? {

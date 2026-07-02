@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		206A014E2FE11AE900AA0A62 /* DragAbleView in Frameworks */ = {isa = PBXBuildFile; productRef = 206A014D2FE11AE900AA0A62 /* DragAbleView */; };
 		206AFF152FE1017100AA0A62 /* DragAbleView in Frameworks */ = {isa = PBXBuildFile; productRef = 206AFF142FE1017100AA0A62 /* DragAbleView */; };
 /* End PBXBuildFile section */
 
@@ -41,6 +42,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				206AFF152FE1017100AA0A62 /* DragAbleView in Frameworks */,
+				206A014E2FE11AE900AA0A62 /* DragAbleView in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -84,6 +86,7 @@
 			name = TestDragAbleView;
 			packageProductDependencies = (
 				206AFF142FE1017100AA0A62 /* DragAbleView */,
+				206A014D2FE11AE900AA0A62 /* DragAbleView */,
 			);
 			productName = TestDragAbleView;
 			productReference = 206AFEFB2FE1014600AA0A62 /* TestDragAbleView.app */;
@@ -114,7 +117,7 @@
 			mainGroup = 206AFEF22FE1014600AA0A62;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				206AFF132FE1017100AA0A62 /* XCLocalSwiftPackageReference "../../../DragAbleView" */,
+				206A014C2FE11AE900AA0A62 /* XCLocalSwiftPackageReference "../../../DragAbleView" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 206AFEFC2FE1014600AA0A62 /* Products */;
@@ -358,13 +361,17 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		206AFF132FE1017100AA0A62 /* XCLocalSwiftPackageReference "../../../DragAbleView" */ = {
+		206A014C2FE11AE900AA0A62 /* XCLocalSwiftPackageReference "../../../DragAbleView" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../../../DragAbleView;
 		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		206A014D2FE11AE900AA0A62 /* DragAbleView */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DragAbleView;
+		};
 		206AFF142FE1017100AA0A62 /* DragAbleView */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = DragAbleView;

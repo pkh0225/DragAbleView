@@ -4,7 +4,7 @@
 import UIKit
 
 @MainActor
-public class DragAbleView: UIView {
+open class DragAbleView: UIView {
     weak var containerView: UIView?
     // 다이나믹스 애니메이터 인스턴스 변수 선언
     public var animator: UIDynamicAnimator?

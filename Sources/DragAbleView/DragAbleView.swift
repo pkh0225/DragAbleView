@@ -85,6 +85,8 @@ open class DragAbleView: UIView {
 public class DragAbleViewManager {
     public weak var containerView: UIView?
     public var itemViews = [UIView: UIPanGestureRecognizer]()
+    private let snapsToNearestEdge: Bool
+    private var snapBehaviors = [UIView: UISnapBehavior]()
     // 다이나믹스 애니메이터 인스턴스 변수 선언
     var animator: UIDynamicAnimator?
     // 탄성 설정
@@ -97,7 +99,8 @@ public class DragAbleViewManager {
     var currentLocation: CGPoint = .zero
 
     // View가 먼저 Add 된 후 호출 해야 함
-    public init(containerView: UIView, setBoundsIntoBoundary: UIEdgeInsets, itemViews: [UIView]) {
+    public init(containerView: UIView, setBoundsIntoBoundary: UIEdgeInsets, itemViews: [UIView], snapsToNearestEdge: Bool = false) {
+        self.snapsToNearestEdge = snapsToNearestEdge
         itemViews.forEach {
             $0.tagName = "DragAbleView"
             containerView.addSubview( $0 )
@@ -119,6 +122,30 @@ public class DragAbleViewManager {
         addPanGesture(itemViews: itemViews)
     }
 
+    private func removeSnapBehavior(for view: UIView) {
+        guard let behavior = snapBehaviors.removeValue(forKey: view) else { return }
+        animator?.removeBehavior(behavior)
+    }
+
+    private func snapToNearestEdge(_ view: UIView, in containerView: UIView) {
+        let bounds = containerView.bounds
+        let insets = containerView.safeAreaInsets
+        let edgePadding: CGFloat = 8
+        let halfWidth = view.bounds.width / 2
+        let leftX = bounds.minX + insets.left + edgePadding + halfWidth
+        let rightX = bounds.maxX - insets.right - edgePadding - halfWidth
+        let targetX = view.center.x < bounds.midX ? leftX : rightX
+
+        let halfHeight = view.bounds.height / 2
+        let topY = bounds.minY + insets.top + edgePadding + halfHeight
+        let bottomY = bounds.maxY - insets.bottom - edgePadding - halfHeight
+        let targetY = min(max(view.center.y, min(topY, bottomY)), max(topY, bottomY))
+        let behavior = UISnapBehavior(item: view, snapTo: CGPoint(x: targetX, y: targetY))
+        behavior.damping = 0.8
+        snapBehaviors[view] = behavior
+        animator?.addBehavior(behavior)
+    }
+
     public func getView(tag: Int) -> UIView? {
         self.itemViews.filter { $0.key.tag == tag }.first?.key
     }
@@ -132,6 +159,7 @@ public class DragAbleViewManager {
     }
 
     public func removeView(view: UIView) {
+        removeSnapBehavior(for: view)
         viewBehavior?.removeItem(view)
         collision?.removeItem(view)
         if let g = self.itemViews[view] {
@@ -159,6 +187,7 @@ public class DragAbleViewManager {
         guard let containerView = self.containerView else { return }
         switch gesture.state {
         case .began:
+            removeSnapBehavior(for: view)
             containerView.bringSubviewToFront(view)
             currentLocation = gesture.location(in: containerView)
             attachment = UIAttachmentBehavior(item: view, attachedToAnchor: currentLocation)
@@ -167,12 +196,21 @@ public class DragAbleViewManager {
             currentLocation = gesture.location(in: containerView)
             attachment?.anchorPoint = currentLocation
         case .cancelled, .ended:
-            let velocity = gesture.velocity(in: containerView)
-            viewBehavior?.addLinearVelocity(velocity, for: view)
-            if let attachment {
-                animator?.removeBehavior(attachment)
+            if snapsToNearestEdge {
+                if let attachment {
+                    animator?.removeBehavior(attachment)
+                }
+                attachment = nil
+                snapToNearestEdge(view, in: containerView)
             }
-            attachment = nil
+            else {
+                let velocity = gesture.velocity(in: containerView)
+                viewBehavior?.addLinearVelocity(velocity, for: view)
+                if let attachment {
+                    animator?.removeBehavior(attachment)
+                }
+                attachment = nil
+            }
         case .possible:
             break
         case .failed:
@@ -192,11 +230,7 @@ private extension UIView {
     }
 
     var tagName: String? {
-        get {
-            return objc_getAssociatedObject(self, &AssociatedKeys.tagName) as? String
-        }
-        set {
-            objc_setAssociatedObject(self, &AssociatedKeys.tagName, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        }
+        get { return objc_getAssociatedObject(self, &AssociatedKeys.tagName) as? String }
+        set { objc_setAssociatedObject(self, &AssociatedKeys.tagName, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
     }
 }

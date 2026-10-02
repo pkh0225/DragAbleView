@@ -51,7 +51,10 @@ class ViewController: UIViewController {
 
         itemViews.append(v)
         if dragAbleViewManager == nil {
-            dragAbleViewManager = DragAbleViewManager(containerView: window, setBoundsIntoBoundary: UIEdgeInsets(top: top, left: 0, bottom: bottom, right: 0), itemViews: [v])
+            dragAbleViewManager = DragAbleViewManager(containerView: window,
+                                                      setBoundsIntoBoundary: UIEdgeInsets(top: top, left: 0, bottom: bottom, right: 0),
+                                                      itemViews: [v],
+                                                      snapsToNearestEdge: false)
         }
         else {
             dragAbleViewManager?.addView(view: v)
